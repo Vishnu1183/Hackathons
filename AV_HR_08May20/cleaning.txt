@@ -1,0 +1,1318 @@
+{
+ "cells": [
+  {
+   "cell_type": "raw",
+   "metadata": {},
+   "source": [
+    "error aa ja"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from IPython.core.interactiveshell import InteractiveShell\n",
+    "InteractiveShell.ast_node_interactivity = 'all'\n",
+    "import warnings\n",
+    "warnings.filterwarnings('ignore')\n",
+    "#pd.set_option(\"display.max_columns\",50)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import re\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "from sklearn.linear_model import LogisticRegression\n",
+    "from sklearn.ensemble import RandomForestClassifier, StackingClassifier\n",
+    "from sklearn.preprocessing import StandardScaler,MinMaxScaler,MaxAbsScaler\n",
+    "from sklearn.model_selection import cross_val_score,GridSearchCV,StratifiedKFold,RepeatedStratifiedKFold,RandomizedSearchCV\n",
+    "from sklearn.metrics import accuracy_score,auc,recall_score,precision_score,precision_recall_curve,confusion_matrix,\\\n",
+    "plot_confusion_matrix,plot_precision_recall_curve,plot_roc_curve,classification_report,roc_auc_score,f1_score\n",
+    "from xgboost import XGBClassifier\n",
+    "from sklearn.pipeline import make_pipeline\n",
+    "from sklearn.svm import LinearSVC\n",
+    "from sklearn.neighbors import KNeighborsClassifier\n",
+    "from sklearn.impute import SimpleImputer,KNNImputer\n",
+    "from sklearn.compose import ColumnTransformer\n",
+    "from sklearn.impute import KNNImputer,MissingIndicator,SimpleImputer\n",
+    "from sklearn.experimental import enable_iterative_imputer\n",
+    "from sklearn.impute import IterativeImputer"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import re\n",
+    "import seaborn as sns\n",
+    "from matplotlib import pyplot as plt\n",
+    "sns.set(style=\"darkgrid\") #white, dark, whitegrid, darkgrid, ticks\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "path = \"/home/op_2344_appmon/_392256_vishnu/CHBT\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "['a.data.csv',\n",
+       " 'a.lbl.csv',\n",
+       " 'instructions.txt',\n",
+       " 'm.data.csv',\n",
+       " 'm.lbl.csv',\n",
+       " 'p.data.csv',\n",
+       " 'p.lbl.csv']"
+      ]
+     },
+     "execution_count": 37,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import zipfile\n",
+    "zf = zipfile.ZipFile(f'{path}/data_analysis.zip') \n",
+    "zf.namelist()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### reading sensor data and labels"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 114,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'shape of a_data : (71642, 11) & shape of a_label : (10, 3)'"
+      ]
+     },
+     "execution_count": 114,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "'shape of m_data : (21325, 11) & shape of a_label : (328, 3)'"
+      ]
+     },
+     "execution_count": 114,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "'shape of p_data : (70902, 11) & shape of a_label : (290, 3)'"
+      ]
+     },
+     "execution_count": 114,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "a_data = pd.read_csv(zf.open('a.data.csv'))\n",
+    "a_data['data_name'] = 'a'\n",
+    "m_data = pd.read_csv(zf.open('m.data.csv'))\n",
+    "m_data['data_name'] = 'm'\n",
+    "p_data = pd.read_csv(zf.open('p.data.csv'))\n",
+    "p_data['data_name'] = 'p'\n",
+    "a_lbl = pd.read_csv(zf.open('a.lbl.csv'),)\n",
+    "a_lbl['data_name'] = 'a'\n",
+    "m_lbl = pd.read_csv(zf.open('m.lbl.csv'))\n",
+    "m_lbl['data_name'] = 'm'\n",
+    "p_lbl = pd.read_csv(zf.open('p.lbl.csv'))\n",
+    "p_lbl['data_name'] = 'p'\n",
+    "f'shape of a_data : {a_data.shape} & shape of a_label : {a_lbl.shape}'\n",
+    "f'shape of m_data : {m_data.shape} & shape of a_label : {m_lbl.shape}'\n",
+    "f'shape of p_data : {p_data.shape} & shape of a_label : {p_lbl.shape}'"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### concatinating all 3 files"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 127,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data = pd.concat([a_data,m_data,p_data], axis = 0).reset_index(drop = True)\n",
+    "target = pd.concat([a_lbl,m_lbl,p_lbl], axis = 0).reset_index(drop = True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 128,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>timestamp(ms)</th>\n",
+       "      <th>acceleration_x(g)</th>\n",
+       "      <th>acceleration_y(g)</th>\n",
+       "      <th>acceleration_z(g)</th>\n",
+       "      <th>roll(rad)</th>\n",
+       "      <th>pitch(rad)</th>\n",
+       "      <th>yaw(rad)</th>\n",
+       "      <th>angular_velocity_x(rad/sec)</th>\n",
+       "      <th>angular_velocity_y(rad/sec)</th>\n",
+       "      <th>angular_velocity_z(rad/sec)</th>\n",
+       "      <th>data_name</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1397019805843</td>\n",
+       "      <td>0.0809</td>\n",
+       "      <td>-0.2223</td>\n",
+       "      <td>0.2055</td>\n",
+       "      <td>0.4154</td>\n",
+       "      <td>-1.0777</td>\n",
+       "      <td>-2.4263</td>\n",
+       "      <td>-0.212</td>\n",
+       "      <td>-0.212</td>\n",
+       "      <td>0.3575</td>\n",
+       "      <td>a</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   timestamp(ms)  acceleration_x(g)  acceleration_y(g)  acceleration_z(g)  \\\n",
+       "0  1397019805843             0.0809            -0.2223             0.2055   \n",
+       "\n",
+       "   roll(rad)  pitch(rad)  yaw(rad)  angular_velocity_x(rad/sec)  \\\n",
+       "0     0.4154     -1.0777   -2.4263                       -0.212   \n",
+       "\n",
+       "   angular_velocity_y(rad/sec)  angular_velocity_z(rad/sec) data_name  \n",
+       "0                       -0.212                       0.3575         a  "
+      ]
+     },
+     "execution_count": 128,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.head(1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### mapping target"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 132,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data['target'] = data['timestamp(ms)'].map(target.set_index('timestamp(ms)')['label (0=start 1=end 2=cancel)']).fillna(2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 130,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "163802"
+      ]
+     },
+     "execution_count": 130,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data['timestamp(ms)'].nunique()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 142,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "2.0    163865\n",
+       "1.0         2\n",
+       "0.0         2\n",
+       "Name: target, dtype: int64"
+      ]
+     },
+     "execution_count": 142,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th>timestamp(ms)</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>target</th>\n",
+       "      <th>data_name</th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0.0</th>\n",
+       "      <th>m</th>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1.0</th>\n",
+       "      <th>m</th>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"3\" valign=\"top\">2.0</th>\n",
+       "      <th>a</th>\n",
+       "      <td>71642</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>m</th>\n",
+       "      <td>21321</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>p</th>\n",
+       "      <td>70902</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                  timestamp(ms)\n",
+       "target data_name               \n",
+       "0.0    m                      2\n",
+       "1.0    m                      2\n",
+       "2.0    a                  71642\n",
+       "       m                  21321\n",
+       "       p                  70902"
+      ]
+     },
+     "execution_count": 142,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data['target'].value_counts(dropna = False)\n",
+    "pd.pivot_table(data= data, values = 'timestamp(ms)',  index = ['target', 'data_name'], aggfunc = len)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 139,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "def data_info(df):\n",
+    "    df_info = pd.DataFrame(df.isna().sum(),columns = ['Null_count'])\n",
+    "    df_info['Non_Null_count'] = df_info.index.map(df.notna().sum())\n",
+    "    df_info['N_unique'] = df_info.index.map(df.nunique())\n",
+    "    df_info['D_types'] = df_info.index.map(df.dtypes)\n",
+    "    df_info['Blank_count'] = df_info.index.map((df=='').sum())\n",
+    "    return df_info"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 140,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Null_count</th>\n",
+       "      <th>Non_Null_count</th>\n",
+       "      <th>N_unique</th>\n",
+       "      <th>D_types</th>\n",
+       "      <th>Blank_count</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>timestamp(ms)</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>163802</td>\n",
+       "      <td>int64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>acceleration_x(g)</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>12959</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>acceleration_y(g)</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>12035</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>acceleration_z(g)</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>12611</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>roll(rad)</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>20171</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>pitch(rad)</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>18183</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>yaw(rad)</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>35487</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>angular_velocity_x(rad/sec)</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>19754</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>angular_velocity_y(rad/sec)</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>19754</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>angular_velocity_z(rad/sec)</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>19840</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>data_name</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>3</td>\n",
+       "      <td>object</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>target</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>3</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                             Null_count  Non_Null_count  N_unique  D_types  \\\n",
+       "timestamp(ms)                         0          163869    163802    int64   \n",
+       "acceleration_x(g)                     0          163869     12959  float64   \n",
+       "acceleration_y(g)                     0          163869     12035  float64   \n",
+       "acceleration_z(g)                     0          163869     12611  float64   \n",
+       "roll(rad)                             0          163869     20171  float64   \n",
+       "pitch(rad)                            0          163869     18183  float64   \n",
+       "yaw(rad)                              0          163869     35487  float64   \n",
+       "angular_velocity_x(rad/sec)           0          163869     19754  float64   \n",
+       "angular_velocity_y(rad/sec)           0          163869     19754  float64   \n",
+       "angular_velocity_z(rad/sec)           0          163869     19840  float64   \n",
+       "data_name                             0          163869         3   object   \n",
+       "target                                0          163869         3  float64   \n",
+       "\n",
+       "                             Blank_count  \n",
+       "timestamp(ms)                          0  \n",
+       "acceleration_x(g)                      0  \n",
+       "acceleration_y(g)                      0  \n",
+       "acceleration_z(g)                      0  \n",
+       "roll(rad)                              0  \n",
+       "pitch(rad)                             0  \n",
+       "yaw(rad)                               0  \n",
+       "angular_velocity_x(rad/sec)            0  \n",
+       "angular_velocity_y(rad/sec)            0  \n",
+       "angular_velocity_z(rad/sec)            0  \n",
+       "data_name                              0  \n",
+       "target                                 0  "
+      ]
+     },
+     "execution_count": 140,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data_info(df = data)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 141,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>timestamp(ms)</th>\n",
+       "      <th>acceleration_x(g)</th>\n",
+       "      <th>acceleration_y(g)</th>\n",
+       "      <th>acceleration_z(g)</th>\n",
+       "      <th>roll(rad)</th>\n",
+       "      <th>pitch(rad)</th>\n",
+       "      <th>yaw(rad)</th>\n",
+       "      <th>angular_velocity_x(rad/sec)</th>\n",
+       "      <th>angular_velocity_y(rad/sec)</th>\n",
+       "      <th>angular_velocity_z(rad/sec)</th>\n",
+       "      <th>target</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>count</th>\n",
+       "      <td>1.638690e+05</td>\n",
+       "      <td>163869.000000</td>\n",
+       "      <td>163869.000000</td>\n",
+       "      <td>163869.000000</td>\n",
+       "      <td>163869.000000</td>\n",
+       "      <td>163869.000000</td>\n",
+       "      <td>163869.000000</td>\n",
+       "      <td>163869.000000</td>\n",
+       "      <td>163869.000000</td>\n",
+       "      <td>163869.000000</td>\n",
+       "      <td>163869.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>mean</th>\n",
+       "      <td>1.397007e+12</td>\n",
+       "      <td>-0.017777</td>\n",
+       "      <td>0.022236</td>\n",
+       "      <td>0.003558</td>\n",
+       "      <td>0.228333</td>\n",
+       "      <td>-0.292380</td>\n",
+       "      <td>0.816517</td>\n",
+       "      <td>0.002184</td>\n",
+       "      <td>0.002184</td>\n",
+       "      <td>-0.000136</td>\n",
+       "      <td>1.999963</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>std</th>\n",
+       "      <td>6.133859e+07</td>\n",
+       "      <td>0.293505</td>\n",
+       "      <td>0.229011</td>\n",
+       "      <td>0.195518</td>\n",
+       "      <td>0.597216</td>\n",
+       "      <td>0.420155</td>\n",
+       "      <td>1.586756</td>\n",
+       "      <td>0.737516</td>\n",
+       "      <td>0.737516</td>\n",
+       "      <td>1.188025</td>\n",
+       "      <td>0.007812</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>min</th>\n",
+       "      <td>1.396949e+12</td>\n",
+       "      <td>-7.343800</td>\n",
+       "      <td>-5.750900</td>\n",
+       "      <td>-7.348900</td>\n",
+       "      <td>-3.141200</td>\n",
+       "      <td>-1.557000</td>\n",
+       "      <td>-3.141100</td>\n",
+       "      <td>-28.170800</td>\n",
+       "      <td>-28.170800</td>\n",
+       "      <td>-25.219800</td>\n",
+       "      <td>0.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>25%</th>\n",
+       "      <td>1.396965e+12</td>\n",
+       "      <td>-0.001100</td>\n",
+       "      <td>-0.000900</td>\n",
+       "      <td>-0.008300</td>\n",
+       "      <td>-0.007300</td>\n",
+       "      <td>-0.635500</td>\n",
+       "      <td>0.346500</td>\n",
+       "      <td>-0.004800</td>\n",
+       "      <td>-0.004800</td>\n",
+       "      <td>-0.004700</td>\n",
+       "      <td>2.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>50%</th>\n",
+       "      <td>1.397020e+12</td>\n",
+       "      <td>0.001700</td>\n",
+       "      <td>0.002900</td>\n",
+       "      <td>-0.001100</td>\n",
+       "      <td>0.017300</td>\n",
+       "      <td>-0.166800</td>\n",
+       "      <td>1.391600</td>\n",
+       "      <td>0.000200</td>\n",
+       "      <td>0.000200</td>\n",
+       "      <td>-0.000100</td>\n",
+       "      <td>2.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>75%</th>\n",
+       "      <td>1.397024e+12</td>\n",
+       "      <td>0.004800</td>\n",
+       "      <td>0.007100</td>\n",
+       "      <td>0.009400</td>\n",
+       "      <td>0.319400</td>\n",
+       "      <td>-0.064400</td>\n",
+       "      <td>2.013100</td>\n",
+       "      <td>0.004800</td>\n",
+       "      <td>0.004800</td>\n",
+       "      <td>0.004700</td>\n",
+       "      <td>2.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>max</th>\n",
+       "      <td>1.397199e+12</td>\n",
+       "      <td>7.666000</td>\n",
+       "      <td>8.600600</td>\n",
+       "      <td>4.267000</td>\n",
+       "      <td>3.139200</td>\n",
+       "      <td>1.541600</td>\n",
+       "      <td>3.141400</td>\n",
+       "      <td>22.085100</td>\n",
+       "      <td>22.085100</td>\n",
+       "      <td>29.834700</td>\n",
+       "      <td>2.000000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "       timestamp(ms)  acceleration_x(g)  acceleration_y(g)  acceleration_z(g)  \\\n",
+       "count   1.638690e+05      163869.000000      163869.000000      163869.000000   \n",
+       "mean    1.397007e+12          -0.017777           0.022236           0.003558   \n",
+       "std     6.133859e+07           0.293505           0.229011           0.195518   \n",
+       "min     1.396949e+12          -7.343800          -5.750900          -7.348900   \n",
+       "25%     1.396965e+12          -0.001100          -0.000900          -0.008300   \n",
+       "50%     1.397020e+12           0.001700           0.002900          -0.001100   \n",
+       "75%     1.397024e+12           0.004800           0.007100           0.009400   \n",
+       "max     1.397199e+12           7.666000           8.600600           4.267000   \n",
+       "\n",
+       "           roll(rad)     pitch(rad)       yaw(rad)  \\\n",
+       "count  163869.000000  163869.000000  163869.000000   \n",
+       "mean        0.228333      -0.292380       0.816517   \n",
+       "std         0.597216       0.420155       1.586756   \n",
+       "min        -3.141200      -1.557000      -3.141100   \n",
+       "25%        -0.007300      -0.635500       0.346500   \n",
+       "50%         0.017300      -0.166800       1.391600   \n",
+       "75%         0.319400      -0.064400       2.013100   \n",
+       "max         3.139200       1.541600       3.141400   \n",
+       "\n",
+       "       angular_velocity_x(rad/sec)  angular_velocity_y(rad/sec)  \\\n",
+       "count                163869.000000                163869.000000   \n",
+       "mean                      0.002184                     0.002184   \n",
+       "std                       0.737516                     0.737516   \n",
+       "min                     -28.170800                   -28.170800   \n",
+       "25%                      -0.004800                    -0.004800   \n",
+       "50%                       0.000200                     0.000200   \n",
+       "75%                       0.004800                     0.004800   \n",
+       "max                      22.085100                    22.085100   \n",
+       "\n",
+       "       angular_velocity_z(rad/sec)         target  \n",
+       "count                163869.000000  163869.000000  \n",
+       "mean                     -0.000136       1.999963  \n",
+       "std                       1.188025       0.007812  \n",
+       "min                     -25.219800       0.000000  \n",
+       "25%                      -0.004700       2.000000  \n",
+       "50%                      -0.000100       2.000000  \n",
+       "75%                       0.004700       2.000000  \n",
+       "max                      29.834700       2.000000  "
+      ]
+     },
+     "execution_count": 141,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.describe()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 105,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>timestamp(ms)</th>\n",
+       "      <th>acceleration_x(g)</th>\n",
+       "      <th>acceleration_y(g)</th>\n",
+       "      <th>acceleration_z(g)</th>\n",
+       "      <th>roll(rad)</th>\n",
+       "      <th>pitch(rad)</th>\n",
+       "      <th>yaw(rad)</th>\n",
+       "      <th>angular_velocity_x(rad/sec)</th>\n",
+       "      <th>angular_velocity_y(rad/sec)</th>\n",
+       "      <th>angular_velocity_z(rad/sec)</th>\n",
+       "      <th>target</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1397019805843</td>\n",
+       "      <td>0.0809</td>\n",
+       "      <td>-0.2223</td>\n",
+       "      <td>0.2055</td>\n",
+       "      <td>0.4154</td>\n",
+       "      <td>-1.0777</td>\n",
+       "      <td>-2.4263</td>\n",
+       "      <td>-0.2120</td>\n",
+       "      <td>-0.2120</td>\n",
+       "      <td>0.3575</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1397019805942</td>\n",
+       "      <td>0.0505</td>\n",
+       "      <td>-0.1454</td>\n",
+       "      <td>0.0934</td>\n",
+       "      <td>0.4797</td>\n",
+       "      <td>-1.0745</td>\n",
+       "      <td>-2.3135</td>\n",
+       "      <td>-0.0847</td>\n",
+       "      <td>-0.0847</td>\n",
+       "      <td>0.6287</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>1397019806040</td>\n",
+       "      <td>0.1952</td>\n",
+       "      <td>0.5475</td>\n",
+       "      <td>-0.0295</td>\n",
+       "      <td>0.5663</td>\n",
+       "      <td>-1.0610</td>\n",
+       "      <td>-2.1922</td>\n",
+       "      <td>-0.2483</td>\n",
+       "      <td>-0.2483</td>\n",
+       "      <td>0.4558</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>1397019806139</td>\n",
+       "      <td>-0.0578</td>\n",
+       "      <td>0.1958</td>\n",
+       "      <td>0.0850</td>\n",
+       "      <td>0.6059</td>\n",
+       "      <td>-1.0666</td>\n",
+       "      <td>-2.1255</td>\n",
+       "      <td>-0.0796</td>\n",
+       "      <td>-0.0796</td>\n",
+       "      <td>0.0817</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>1397019806237</td>\n",
+       "      <td>0.0800</td>\n",
+       "      <td>-0.1689</td>\n",
+       "      <td>-0.2530</td>\n",
+       "      <td>0.5836</td>\n",
+       "      <td>-1.0347</td>\n",
+       "      <td>-2.1527</td>\n",
+       "      <td>0.6329</td>\n",
+       "      <td>0.6329</td>\n",
+       "      <td>0.0925</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   timestamp(ms)  acceleration_x(g)  acceleration_y(g)  acceleration_z(g)  \\\n",
+       "0  1397019805843             0.0809            -0.2223             0.2055   \n",
+       "1  1397019805942             0.0505            -0.1454             0.0934   \n",
+       "2  1397019806040             0.1952             0.5475            -0.0295   \n",
+       "3  1397019806139            -0.0578             0.1958             0.0850   \n",
+       "4  1397019806237             0.0800            -0.1689            -0.2530   \n",
+       "\n",
+       "   roll(rad)  pitch(rad)  yaw(rad)  angular_velocity_x(rad/sec)  \\\n",
+       "0     0.4154     -1.0777   -2.4263                      -0.2120   \n",
+       "1     0.4797     -1.0745   -2.3135                      -0.0847   \n",
+       "2     0.5663     -1.0610   -2.1922                      -0.2483   \n",
+       "3     0.6059     -1.0666   -2.1255                      -0.0796   \n",
+       "4     0.5836     -1.0347   -2.1527                       0.6329   \n",
+       "\n",
+       "   angular_velocity_y(rad/sec)  angular_velocity_z(rad/sec)  target  \n",
+       "0                      -0.2120                       0.3575     NaN  \n",
+       "1                      -0.0847                       0.6287     NaN  \n",
+       "2                      -0.2483                       0.4558     NaN  \n",
+       "3                      -0.0796                       0.0817     NaN  \n",
+       "4                       0.6329                       0.0925     NaN  "
+      ]
+     },
+     "execution_count": 105,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "a_data.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 87,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([1397019861612, 1397019866475, 1397019887463, 1397019888154,\n",
+       "       1397020224082, 1397020224389, 1397020271356, 1397020271951,\n",
+       "       1397020352968, 1397020353332])"
+      ]
+     },
+     "execution_count": 87,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "71642"
+      ]
+     },
+     "execution_count": 87,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "a_lbl['timestamp(ms)'].unique()\n",
+    "a_data['timestamp(ms)'].nunique()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 98,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "a_data['target'] = a_data['timestamp(ms)'].map(a_lbl.set_index('timestamp(ms)')['label (0=start 1=end 2=cancel)'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 99,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Series([], Name: target, dtype: int64)"
+      ]
+     },
+     "execution_count": 99,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "a_data['target'] .value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 100,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "False    71642\n",
+       "Name: timestamp(ms), dtype: int64"
+      ]
+     },
+     "execution_count": 100,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "a_data['timestamp(ms)'].isin(a_lbl['timestamp(ms)']).value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 95,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([0, 1])"
+      ]
+     },
+     "execution_count": 95,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "p_lbl['label (0=start 1=end 2=cancel)'].unique()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 103,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def unixToUTC(df,var):\n",
+    "    df[var]=pd.to_datetime(df[var]/1e3,unit='s')\n",
+    "    return(df)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 104,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "13"
+      ]
+     },
+     "execution_count": 104,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "len('1397019861612')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 101,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'unixToUTC' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-101-7f023778a29f>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0munixToUTC\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0ma_lbl\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m'timestamp(ms)'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+      "\u001b[0;31mNameError\u001b[0m: name 'unixToUTC' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "unixToUTC(a_lbl,'timestamp(ms)')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 91,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "datetime.datetime(2014, 4, 9, 10, 34, 21, 612000)"
+      ]
+     },
+     "execution_count": 91,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "\n",
+    "from datetime import datetime\n",
+    "\n",
+    "timestamp = 1397019861.612\n",
+    "dt_object = datetime.fromtimestamp(timestamp)\n",
+    "\n",
+    "dt_object"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 80,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>timestamp(ms)</th>\n",
+       "      <th>acceleration_x(g)</th>\n",
+       "      <th>acceleration_y(g)</th>\n",
+       "      <th>acceleration_z(g)</th>\n",
+       "      <th>roll(rad)</th>\n",
+       "      <th>pitch(rad)</th>\n",
+       "      <th>yaw(rad)</th>\n",
+       "      <th>angular_velocity_x(rad/sec)</th>\n",
+       "      <th>angular_velocity_y(rad/sec)</th>\n",
+       "      <th>angular_velocity_z(rad/sec)</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1397019805843</td>\n",
+       "      <td>0.0809</td>\n",
+       "      <td>-0.2223</td>\n",
+       "      <td>0.2055</td>\n",
+       "      <td>0.4154</td>\n",
+       "      <td>-1.0777</td>\n",
+       "      <td>-2.4263</td>\n",
+       "      <td>-0.2120</td>\n",
+       "      <td>-0.2120</td>\n",
+       "      <td>0.3575</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1397019805942</td>\n",
+       "      <td>0.0505</td>\n",
+       "      <td>-0.1454</td>\n",
+       "      <td>0.0934</td>\n",
+       "      <td>0.4797</td>\n",
+       "      <td>-1.0745</td>\n",
+       "      <td>-2.3135</td>\n",
+       "      <td>-0.0847</td>\n",
+       "      <td>-0.0847</td>\n",
+       "      <td>0.6287</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>1397019806040</td>\n",
+       "      <td>0.1952</td>\n",
+       "      <td>0.5475</td>\n",
+       "      <td>-0.0295</td>\n",
+       "      <td>0.5663</td>\n",
+       "      <td>-1.0610</td>\n",
+       "      <td>-2.1922</td>\n",
+       "      <td>-0.2483</td>\n",
+       "      <td>-0.2483</td>\n",
+       "      <td>0.4558</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>1397019806139</td>\n",
+       "      <td>-0.0578</td>\n",
+       "      <td>0.1958</td>\n",
+       "      <td>0.0850</td>\n",
+       "      <td>0.6059</td>\n",
+       "      <td>-1.0666</td>\n",
+       "      <td>-2.1255</td>\n",
+       "      <td>-0.0796</td>\n",
+       "      <td>-0.0796</td>\n",
+       "      <td>0.0817</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>1397019806237</td>\n",
+       "      <td>0.0800</td>\n",
+       "      <td>-0.1689</td>\n",
+       "      <td>-0.2530</td>\n",
+       "      <td>0.5836</td>\n",
+       "      <td>-1.0347</td>\n",
+       "      <td>-2.1527</td>\n",
+       "      <td>0.6329</td>\n",
+       "      <td>0.6329</td>\n",
+       "      <td>0.0925</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   timestamp(ms)  acceleration_x(g)  acceleration_y(g)  acceleration_z(g)  \\\n",
+       "0  1397019805843             0.0809            -0.2223             0.2055   \n",
+       "1  1397019805942             0.0505            -0.1454             0.0934   \n",
+       "2  1397019806040             0.1952             0.5475            -0.0295   \n",
+       "3  1397019806139            -0.0578             0.1958             0.0850   \n",
+       "4  1397019806237             0.0800            -0.1689            -0.2530   \n",
+       "\n",
+       "   roll(rad)  pitch(rad)  yaw(rad)  angular_velocity_x(rad/sec)  \\\n",
+       "0     0.4154     -1.0777   -2.4263                      -0.2120   \n",
+       "1     0.4797     -1.0745   -2.3135                      -0.0847   \n",
+       "2     0.5663     -1.0610   -2.1922                      -0.2483   \n",
+       "3     0.6059     -1.0666   -2.1255                      -0.0796   \n",
+       "4     0.5836     -1.0347   -2.1527                       0.6329   \n",
+       "\n",
+       "   angular_velocity_y(rad/sec)  angular_velocity_z(rad/sec)  \n",
+       "0                      -0.2120                       0.3575  \n",
+       "1                      -0.0847                       0.6287  \n",
+       "2                      -0.2483                       0.4558  \n",
+       "3                      -0.0796                       0.0817  \n",
+       "4                       0.6329                       0.0925  "
+      ]
+     },
+     "execution_count": 80,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "a_data.head()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
