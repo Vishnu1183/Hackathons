@@ -9,7 +9,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 2,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -22,7 +22,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 3,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -50,7 +50,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 4,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -62,7 +62,22 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def data_info(df):\n",
+    "    df_info = pd.DataFrame(df.isna().sum(),columns = ['Null_count'])\n",
+    "    df_info['Non_Null_count'] = df_info.index.map(df.notna().sum())\n",
+    "    df_info['N_unique'] = df_info.index.map(df.nunique())\n",
+    "    df_info['D_types'] = df_info.index.map(df.dtypes)\n",
+    "    df_info['Blank_count'] = df_info.index.map((df=='').sum())\n",
+    "    return df_info"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -71,7 +86,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [
     {
@@ -86,7 +101,7 @@
        " 'p.lbl.csv']"
       ]
      },
-     "execution_count": 5,
+     "execution_count": 7,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -106,7 +121,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": 8,
    "metadata": {},
    "outputs": [
     {
@@ -115,7 +130,7 @@
        "'shape of a_data : (71642, 11) & shape of a_label : (10, 3)'"
       ]
      },
-     "execution_count": 6,
+     "execution_count": 8,
      "metadata": {},
      "output_type": "execute_result"
     },
@@ -125,7 +140,7 @@
        "'shape of m_data : (21325, 11) & shape of a_label : (328, 3)'"
       ]
      },
-     "execution_count": 6,
+     "execution_count": 8,
      "metadata": {},
      "output_type": "execute_result"
     },
@@ -135,7 +150,7 @@
        "'shape of p_data : (70902, 11) & shape of a_label : (290, 3)'"
       ]
      },
-     "execution_count": 6,
+     "execution_count": 8,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -159,6 +174,90 @@
    ]
   },
   {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>timestamp(ms)</th>\n",
+       "      <th>label (0=start 1=end 2=cancel)</th>\n",
+       "      <th>data_name</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1397019861612</td>\n",
+       "      <td>0</td>\n",
+       "      <td>a</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1397019866475</td>\n",
+       "      <td>1</td>\n",
+       "      <td>a</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>1397019887463</td>\n",
+       "      <td>0</td>\n",
+       "      <td>a</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>1397019888154</td>\n",
+       "      <td>1</td>\n",
+       "      <td>a</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>1397020224082</td>\n",
+       "      <td>0</td>\n",
+       "      <td>a</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   timestamp(ms)  label (0=start 1=end 2=cancel) data_name\n",
+       "0  1397019861612                               0         a\n",
+       "1  1397019866475                               1         a\n",
+       "2  1397019887463                               0         a\n",
+       "3  1397019888154                               1         a\n",
+       "4  1397020224082                               0         a"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "a_lbl.head()"
+   ]
+  },
+  {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
@@ -167,7 +266,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 22,
+   "execution_count": 10,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -176,1031 +275,29 @@
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": 23,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "dtype('int64')"
-      ]
-     },
-     "execution_count": 23,
-     "metadata": {},
-     "output_type": "execute_result"
-    },
-    {
-     "data": {
-      "text/plain": [
-       "dtype('int64')"
-      ]
-     },
-     "execution_count": 23,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "data['timestamp(ms)'].dtype\n",
-    "target['timestamp(ms)'].dtype"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 24,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>timestamp(ms)</th>\n",
-       "      <th>acceleration_x(g)</th>\n",
-       "      <th>acceleration_y(g)</th>\n",
-       "      <th>acceleration_z(g)</th>\n",
-       "      <th>roll(rad)</th>\n",
-       "      <th>pitch(rad)</th>\n",
-       "      <th>yaw(rad)</th>\n",
-       "      <th>angular_velocity_x(rad/sec)</th>\n",
-       "      <th>angular_velocity_y(rad/sec)</th>\n",
-       "      <th>angular_velocity_z(rad/sec)</th>\n",
-       "      <th>data_name</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>71642</th>\n",
-       "      <td>1396948626717</td>\n",
-       "      <td>0.0008</td>\n",
-       "      <td>0.0038</td>\n",
-       "      <td>-0.0054</td>\n",
-       "      <td>-0.0217</td>\n",
-       "      <td>0.0018</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>-0.001</td>\n",
-       "      <td>-0.001</td>\n",
-       "      <td>-0.0014</td>\n",
-       "      <td>m</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "       timestamp(ms)  acceleration_x(g)  acceleration_y(g)  acceleration_z(g)  \\\n",
-       "71642  1396948626717             0.0008             0.0038            -0.0054   \n",
-       "\n",
-       "       roll(rad)  pitch(rad)  yaw(rad)  angular_velocity_x(rad/sec)  \\\n",
-       "71642    -0.0217      0.0018       0.0                       -0.001   \n",
-       "\n",
-       "       angular_velocity_y(rad/sec)  angular_velocity_z(rad/sec) data_name  \n",
-       "71642                       -0.001                      -0.0014         m  "
-      ]
-     },
-     "execution_count": 24,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "data.head(1)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 25,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "(628, 3)"
-      ]
-     },
-     "execution_count": 25,
-     "metadata": {},
-     "output_type": "execute_result"
-    },
-    {
-     "data": {
-      "text/plain": [
-       "1    314\n",
-       "0    314\n",
-       "Name: label (0=start 1=end 2=cancel), dtype: int64"
-      ]
-     },
-     "execution_count": 25,
-     "metadata": {},
-     "output_type": "execute_result"
-    },
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>timestamp(ms)</th>\n",
-       "      <th>label (0=start 1=end 2=cancel)</th>\n",
-       "      <th>data_name</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>10</th>\n",
-       "      <td>1396949162159</td>\n",
-       "      <td>0</td>\n",
-       "      <td>m</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>11</th>\n",
-       "      <td>1396949162747</td>\n",
-       "      <td>1</td>\n",
-       "      <td>m</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "    timestamp(ms)  label (0=start 1=end 2=cancel) data_name\n",
-       "10  1396949162159                               0         m\n",
-       "11  1396949162747                               1         m"
-      ]
-     },
-     "execution_count": 25,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "target.shape\n",
-    "target.iloc[:,1].value_counts()\n",
-    "target.head(2)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 44,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "timestamp(ms)                      int64\n",
-       "label (0=start 1=end 2=cancel)     int64\n",
-       "data_name                         object\n",
-       "timestamp                          int64\n",
-       "dtype: object"
-      ]
-     },
-     "execution_count": 44,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "target['timestamp'] = target['timestamp(ms)'].astype('int64') \n",
-    "target.dtypes"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 41,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "data1= pd.merge_asof(left = data[['timestamp(ms)']],right = target, on = 'timestamp(ms)',\\\n",
-    "                     allow_exact_matches=False,direction='forward')"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 47,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "timestamp(ms)                      0\n",
-       "label (0=start 1=end 2=cancel)    28\n",
-       "data_name                         28\n",
-       "timestamp                         28\n",
-       "dtype: int64"
-      ]
-     },
-     "execution_count": 47,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "data1.isna().sum()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 53,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "data1 = data1[data1.timestamp.notna()]"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 55,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>timestamp(ms)</th>\n",
-       "      <th>label (0=start 1=end 2=cancel)</th>\n",
-       "      <th>data_name</th>\n",
-       "      <th>timestamp</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>10</th>\n",
-       "      <td>1396949162159</td>\n",
-       "      <td>0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "    timestamp(ms)  label (0=start 1=end 2=cancel) data_name      timestamp\n",
-       "10  1396949162159                               0         m  1396949162159"
-      ]
-     },
-     "execution_count": 55,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "target[target.timestamp == 1396949162159]"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 61,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "(1396948626717, 1396949162150)"
-      ]
-     },
-     "execution_count": 61,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "data1[data1.timestamp == 1396949162159]['timestamp(ms)'].min(),data1[data1.timestamp == 1396949162159]['timestamp(ms)'].max()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 62,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>timestamp(ms)</th>\n",
-       "      <th>label (0=start 1=end 2=cancel)</th>\n",
-       "      <th>data_name</th>\n",
-       "      <th>timestamp</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>1396948626717</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>1396948626816</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>2</th>\n",
-       "      <td>1396948626915</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>3</th>\n",
-       "      <td>1396948627015</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>4</th>\n",
-       "      <td>1396949160862</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>5</th>\n",
-       "      <td>1396949160958</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>6</th>\n",
-       "      <td>1396949161058</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>7</th>\n",
-       "      <td>1396949161157</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>8</th>\n",
-       "      <td>1396949161257</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>9</th>\n",
-       "      <td>1396949161356</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>10</th>\n",
-       "      <td>1396949161455</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>11</th>\n",
-       "      <td>1396949161554</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>12</th>\n",
-       "      <td>1396949161654</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>13</th>\n",
-       "      <td>1396949161753</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>14</th>\n",
-       "      <td>1396949161852</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>15</th>\n",
-       "      <td>1396949161951</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>16</th>\n",
-       "      <td>1396949162051</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>17</th>\n",
-       "      <td>1396949162150</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162159</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>18</th>\n",
-       "      <td>1396949162251</td>\n",
-       "      <td>1.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162747</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>19</th>\n",
-       "      <td>1396949162349</td>\n",
-       "      <td>1.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162747</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "    timestamp(ms)  label (0=start 1=end 2=cancel) data_name      timestamp\n",
-       "0   1396948626717                             0.0         m  1396949162159\n",
-       "1   1396948626816                             0.0         m  1396949162159\n",
-       "2   1396948626915                             0.0         m  1396949162159\n",
-       "3   1396948627015                             0.0         m  1396949162159\n",
-       "4   1396949160862                             0.0         m  1396949162159\n",
-       "5   1396949160958                             0.0         m  1396949162159\n",
-       "6   1396949161058                             0.0         m  1396949162159\n",
-       "7   1396949161157                             0.0         m  1396949162159\n",
-       "8   1396949161257                             0.0         m  1396949162159\n",
-       "9   1396949161356                             0.0         m  1396949162159\n",
-       "10  1396949161455                             0.0         m  1396949162159\n",
-       "11  1396949161554                             0.0         m  1396949162159\n",
-       "12  1396949161654                             0.0         m  1396949162159\n",
-       "13  1396949161753                             0.0         m  1396949162159\n",
-       "14  1396949161852                             0.0         m  1396949162159\n",
-       "15  1396949161951                             0.0         m  1396949162159\n",
-       "16  1396949162051                             0.0         m  1396949162159\n",
-       "17  1396949162150                             0.0         m  1396949162159\n",
-       "18  1396949162251                             1.0         m  1396949162747\n",
-       "19  1396949162349                             1.0         m  1396949162747"
-      ]
-     },
-     "execution_count": 62,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "data1['timestamp'] = data1['timestamp'].astype('int64',error = 'coerce') \n",
-    "data1.head(20)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 66,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "0.0    161293\n",
-       "1.0      2548\n",
-       "Name: label (0=start 1=end 2=cancel), dtype: int64"
-      ]
-     },
-     "execution_count": 66,
-     "metadata": {},
-     "output_type": "execute_result"
-    },
-    {
-     "data": {
-      "text/plain": [
-       "0.0    0.984448\n",
-       "1.0    0.015552\n",
-       "Name: label (0=start 1=end 2=cancel), dtype: float64"
-      ]
-     },
-     "execution_count": 66,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "data1['label (0=start 1=end 2=cancel)'].value_counts()\n",
-    "data1['label (0=start 1=end 2=cancel)'].value_counts(normalize = True)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 63,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>timestamp(ms)</th>\n",
-       "      <th>label (0=start 1=end 2=cancel)</th>\n",
-       "      <th>data_name</th>\n",
-       "      <th>timestamp</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>11</th>\n",
-       "      <td>1396949162747</td>\n",
-       "      <td>1</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1396949162747</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "    timestamp(ms)  label (0=start 1=end 2=cancel) data_name      timestamp\n",
-       "11  1396949162747                               1         m  1396949162747"
-      ]
-     },
-     "execution_count": 63,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "target[target.timestamp == 1396949162747]"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 64,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "(1396949162251, 1396949162647)"
-      ]
-     },
-     "execution_count": 64,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "data1[data1.timestamp == 1396949162747]['timestamp(ms)'].min(),data1[data1.timestamp == 1396949162747]['timestamp(ms)'].max()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 43,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "timestamp(ms)                       int64\n",
-       "label (0=start 1=end 2=cancel)    float64\n",
-       "data_name                          object\n",
-       "timestamp                         float64\n",
-       "dtype: object"
-      ]
-     },
-     "execution_count": 43,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "data1.dtypes"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 39,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>timestamp(ms)</th>\n",
-       "      <th>label (0=start 1=end 2=cancel)</th>\n",
-       "      <th>data_name</th>\n",
-       "      <th>timestamp</th>\n",
-       "      <th>time_diff</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>1396948626717</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-535442.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>1396948626816</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-535343.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>2</th>\n",
-       "      <td>1396948626915</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-535244.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>3</th>\n",
-       "      <td>1396948627015</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-535144.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>4</th>\n",
-       "      <td>1396949160862</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-1297.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>5</th>\n",
-       "      <td>1396949160958</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-1201.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>6</th>\n",
-       "      <td>1396949161058</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-1101.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>7</th>\n",
-       "      <td>1396949161157</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-1002.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>8</th>\n",
-       "      <td>1396949161257</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-902.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>9</th>\n",
-       "      <td>1396949161356</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-803.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>10</th>\n",
-       "      <td>1396949161455</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-704.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>11</th>\n",
-       "      <td>1396949161554</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-605.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>12</th>\n",
-       "      <td>1396949161654</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-505.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>13</th>\n",
-       "      <td>1396949161753</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-406.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>14</th>\n",
-       "      <td>1396949161852</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-307.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>15</th>\n",
-       "      <td>1396949161951</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-208.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>16</th>\n",
-       "      <td>1396949162051</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-108.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>17</th>\n",
-       "      <td>1396949162150</td>\n",
-       "      <td>0.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-9.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>18</th>\n",
-       "      <td>1396949162251</td>\n",
-       "      <td>1.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-496.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>19</th>\n",
-       "      <td>1396949162349</td>\n",
-       "      <td>1.0</td>\n",
-       "      <td>m</td>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-398.0</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "    timestamp(ms)  label (0=start 1=end 2=cancel) data_name     timestamp  \\\n",
-       "0   1396948626717                             0.0         m  1.396949e+12   \n",
-       "1   1396948626816                             0.0         m  1.396949e+12   \n",
-       "2   1396948626915                             0.0         m  1.396949e+12   \n",
-       "3   1396948627015                             0.0         m  1.396949e+12   \n",
-       "4   1396949160862                             0.0         m  1.396949e+12   \n",
-       "5   1396949160958                             0.0         m  1.396949e+12   \n",
-       "6   1396949161058                             0.0         m  1.396949e+12   \n",
-       "7   1396949161157                             0.0         m  1.396949e+12   \n",
-       "8   1396949161257                             0.0         m  1.396949e+12   \n",
-       "9   1396949161356                             0.0         m  1.396949e+12   \n",
-       "10  1396949161455                             0.0         m  1.396949e+12   \n",
-       "11  1396949161554                             0.0         m  1.396949e+12   \n",
-       "12  1396949161654                             0.0         m  1.396949e+12   \n",
-       "13  1396949161753                             0.0         m  1.396949e+12   \n",
-       "14  1396949161852                             0.0         m  1.396949e+12   \n",
-       "15  1396949161951                             0.0         m  1.396949e+12   \n",
-       "16  1396949162051                             0.0         m  1.396949e+12   \n",
-       "17  1396949162150                             0.0         m  1.396949e+12   \n",
-       "18  1396949162251                             1.0         m  1.396949e+12   \n",
-       "19  1396949162349                             1.0         m  1.396949e+12   \n",
-       "\n",
-       "    time_diff  \n",
-       "0   -535442.0  \n",
-       "1   -535343.0  \n",
-       "2   -535244.0  \n",
-       "3   -535144.0  \n",
-       "4     -1297.0  \n",
-       "5     -1201.0  \n",
-       "6     -1101.0  \n",
-       "7     -1002.0  \n",
-       "8      -902.0  \n",
-       "9      -803.0  \n",
-       "10     -704.0  \n",
-       "11     -605.0  \n",
-       "12     -505.0  \n",
-       "13     -406.0  \n",
-       "14     -307.0  \n",
-       "15     -208.0  \n",
-       "16     -108.0  \n",
-       "17       -9.0  \n",
-       "18     -496.0  \n",
-       "19     -398.0  "
-      ]
-     },
-     "execution_count": 39,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "data1['time_diff'] = data1['timestamp(ms)'] -  data1['timestamp'] \n",
-    "data1.head(20)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### mapping target"
+    "### changing column names"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 132,
+   "execution_count": 11,
    "metadata": {},
    "outputs": [],
    "source": [
-    "data['target'] = data['timestamp(ms)'].map(target.set_index('timestamp(ms)')['label (0=start 1=end 2=cancel)']).fillna(2)"
+    "data.columns = [re.sub(r'\\(.*\\)', '', i) for i in data.columns]\n",
+    "target.columns = [re.sub(r'\\s*\\(.*\\)', '', i) for i in target.columns] #r'\\([^)]*\\)'"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 130,
-   "metadata": {},
+   "execution_count": 12,
+   "metadata": {
+    "scrolled": false
+   },
    "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "163802"
-      ]
-     },
-     "execution_count": 130,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "data['timestamp(ms)'].nunique()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 142,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "2.0    163865\n",
-       "1.0         2\n",
-       "0.0         2\n",
-       "Name: target, dtype: int64"
-      ]
-     },
-     "execution_count": 142,
-     "metadata": {},
-     "output_type": "execute_result"
-    },
     {
      "data": {
       "text/html": [
@@ -1222,83 +319,133 @@
        "  <thead>\n",
        "    <tr style=\"text-align: right;\">\n",
        "      <th></th>\n",
-       "      <th></th>\n",
-       "      <th>timestamp(ms)</th>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>target</th>\n",
-       "      <th>data_name</th>\n",
-       "      <th></th>\n",
+       "      <th>Null_count</th>\n",
+       "      <th>Non_Null_count</th>\n",
+       "      <th>N_unique</th>\n",
+       "      <th>D_types</th>\n",
+       "      <th>Blank_count</th>\n",
        "    </tr>\n",
        "  </thead>\n",
        "  <tbody>\n",
        "    <tr>\n",
-       "      <th>0.0</th>\n",
-       "      <th>m</th>\n",
-       "      <td>2</td>\n",
+       "      <th>timestamp</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>163802</td>\n",
+       "      <td>int64</td>\n",
+       "      <td>0</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th>1.0</th>\n",
-       "      <th>m</th>\n",
-       "      <td>2</td>\n",
+       "      <th>acceleration_x</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>12959</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th rowspan=\"3\" valign=\"top\">2.0</th>\n",
-       "      <th>a</th>\n",
-       "      <td>71642</td>\n",
+       "      <th>acceleration_y</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>12035</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th>m</th>\n",
-       "      <td>21321</td>\n",
+       "      <th>acceleration_z</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>12611</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th>p</th>\n",
-       "      <td>70902</td>\n",
+       "      <th>roll</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>20171</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>pitch</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>18183</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>yaw</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>35487</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>angular_velocity_x</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>19754</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>angular_velocity_y</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>19754</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>angular_velocity_z</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>19840</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>data_name</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163869</td>\n",
+       "      <td>3</td>\n",
+       "      <td>object</td>\n",
+       "      <td>0</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
        "</div>"
       ],
       "text/plain": [
-       "                  timestamp(ms)\n",
-       "target data_name               \n",
-       "0.0    m                      2\n",
-       "1.0    m                      2\n",
-       "2.0    a                  71642\n",
-       "       m                  21321\n",
-       "       p                  70902"
+       "                    Null_count  Non_Null_count  N_unique  D_types  Blank_count\n",
+       "timestamp                    0          163869    163802    int64            0\n",
+       "acceleration_x               0          163869     12959  float64            0\n",
+       "acceleration_y               0          163869     12035  float64            0\n",
+       "acceleration_z               0          163869     12611  float64            0\n",
+       "roll                         0          163869     20171  float64            0\n",
+       "pitch                        0          163869     18183  float64            0\n",
+       "yaw                          0          163869     35487  float64            0\n",
+       "angular_velocity_x           0          163869     19754  float64            0\n",
+       "angular_velocity_y           0          163869     19754  float64            0\n",
+       "angular_velocity_z           0          163869     19840  float64            0\n",
+       "data_name                    0          163869         3   object            0"
       ]
      },
-     "execution_count": 142,
+     "execution_count": 12,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "data['target'].value_counts(dropna = False)\n",
-    "pd.pivot_table(data= data, values = 'timestamp(ms)',  index = ['target', 'data_name'], aggfunc = len)"
+    "data_info(data)"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 139,
-   "metadata": {
-    "scrolled": true
-   },
-   "outputs": [],
-   "source": [
-    "def data_info(df):\n",
-    "    df_info = pd.DataFrame(df.isna().sum(),columns = ['Null_count'])\n",
-    "    df_info['Non_Null_count'] = df_info.index.map(df.notna().sum())\n",
-    "    df_info['N_unique'] = df_info.index.map(df.nunique())\n",
-    "    df_info['D_types'] = df_info.index.map(df.dtypes)\n",
-    "    df_info['Blank_count'] = df_info.index.map((df=='').sum())\n",
-    "    return df_info"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 140,
+   "execution_count": 13,
    "metadata": {},
    "outputs": [
     {
@@ -1331,99 +478,27 @@
        "  </thead>\n",
        "  <tbody>\n",
        "    <tr>\n",
-       "      <th>timestamp(ms)</th>\n",
+       "      <th>timestamp</th>\n",
        "      <td>0</td>\n",
-       "      <td>163869</td>\n",
-       "      <td>163802</td>\n",
+       "      <td>628</td>\n",
+       "      <td>628</td>\n",
        "      <td>int64</td>\n",
        "      <td>0</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th>acceleration_x(g)</th>\n",
+       "      <th>label</th>\n",
        "      <td>0</td>\n",
-       "      <td>163869</td>\n",
-       "      <td>12959</td>\n",
-       "      <td>float64</td>\n",
-       "      <td>0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>acceleration_y(g)</th>\n",
-       "      <td>0</td>\n",
-       "      <td>163869</td>\n",
-       "      <td>12035</td>\n",
-       "      <td>float64</td>\n",
-       "      <td>0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>acceleration_z(g)</th>\n",
-       "      <td>0</td>\n",
-       "      <td>163869</td>\n",
-       "      <td>12611</td>\n",
-       "      <td>float64</td>\n",
-       "      <td>0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>roll(rad)</th>\n",
-       "      <td>0</td>\n",
-       "      <td>163869</td>\n",
-       "      <td>20171</td>\n",
-       "      <td>float64</td>\n",
-       "      <td>0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>pitch(rad)</th>\n",
-       "      <td>0</td>\n",
-       "      <td>163869</td>\n",
-       "      <td>18183</td>\n",
-       "      <td>float64</td>\n",
-       "      <td>0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>yaw(rad)</th>\n",
-       "      <td>0</td>\n",
-       "      <td>163869</td>\n",
-       "      <td>35487</td>\n",
-       "      <td>float64</td>\n",
-       "      <td>0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>angular_velocity_x(rad/sec)</th>\n",
-       "      <td>0</td>\n",
-       "      <td>163869</td>\n",
-       "      <td>19754</td>\n",
-       "      <td>float64</td>\n",
-       "      <td>0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>angular_velocity_y(rad/sec)</th>\n",
-       "      <td>0</td>\n",
-       "      <td>163869</td>\n",
-       "      <td>19754</td>\n",
-       "      <td>float64</td>\n",
-       "      <td>0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>angular_velocity_z(rad/sec)</th>\n",
-       "      <td>0</td>\n",
-       "      <td>163869</td>\n",
-       "      <td>19840</td>\n",
-       "      <td>float64</td>\n",
+       "      <td>628</td>\n",
+       "      <td>2</td>\n",
+       "      <td>int64</td>\n",
        "      <td>0</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>data_name</th>\n",
        "      <td>0</td>\n",
-       "      <td>163869</td>\n",
+       "      <td>628</td>\n",
        "      <td>3</td>\n",
        "      <td>object</td>\n",
-       "      <td>0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>target</th>\n",
-       "      <td>0</td>\n",
-       "      <td>163869</td>\n",
-       "      <td>3</td>\n",
-       "      <td>float64</td>\n",
        "      <td>0</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
@@ -1431,47 +506,60 @@
        "</div>"
       ],
       "text/plain": [
-       "                             Null_count  Non_Null_count  N_unique  D_types  \\\n",
-       "timestamp(ms)                         0          163869    163802    int64   \n",
-       "acceleration_x(g)                     0          163869     12959  float64   \n",
-       "acceleration_y(g)                     0          163869     12035  float64   \n",
-       "acceleration_z(g)                     0          163869     12611  float64   \n",
-       "roll(rad)                             0          163869     20171  float64   \n",
-       "pitch(rad)                            0          163869     18183  float64   \n",
-       "yaw(rad)                              0          163869     35487  float64   \n",
-       "angular_velocity_x(rad/sec)           0          163869     19754  float64   \n",
-       "angular_velocity_y(rad/sec)           0          163869     19754  float64   \n",
-       "angular_velocity_z(rad/sec)           0          163869     19840  float64   \n",
-       "data_name                             0          163869         3   object   \n",
-       "target                                0          163869         3  float64   \n",
-       "\n",
-       "                             Blank_count  \n",
-       "timestamp(ms)                          0  \n",
-       "acceleration_x(g)                      0  \n",
-       "acceleration_y(g)                      0  \n",
-       "acceleration_z(g)                      0  \n",
-       "roll(rad)                              0  \n",
-       "pitch(rad)                             0  \n",
-       "yaw(rad)                               0  \n",
-       "angular_velocity_x(rad/sec)            0  \n",
-       "angular_velocity_y(rad/sec)            0  \n",
-       "angular_velocity_z(rad/sec)            0  \n",
-       "data_name                              0  \n",
-       "target                                 0  "
+       "           Null_count  Non_Null_count  N_unique D_types  Blank_count\n",
+       "timestamp           0             628       628   int64            0\n",
+       "label               0             628         2   int64            0\n",
+       "data_name           0             628         3  object            0"
       ]
      },
-     "execution_count": 140,
+     "execution_count": 13,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "data_info(df = data)"
+    "data_info(target)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### mapping target"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 141,
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "target['timestamp_tar']  = target['timestamp'] "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "base = pd.merge_asof(left = data,right = target, on = 'timestamp',\\\n",
+    "                     allow_exact_matches=False,direction='forward')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "base = base[base.label.notna()]\n",
+    "base['timestamp_tar'] = base['timestamp_tar'].astype('int64',errors = 'ignore')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
    "metadata": {},
    "outputs": [
     {
@@ -1495,401 +583,320 @@
        "  <thead>\n",
        "    <tr style=\"text-align: right;\">\n",
        "      <th></th>\n",
-       "      <th>timestamp(ms)</th>\n",
-       "      <th>acceleration_x(g)</th>\n",
-       "      <th>acceleration_y(g)</th>\n",
-       "      <th>acceleration_z(g)</th>\n",
-       "      <th>roll(rad)</th>\n",
-       "      <th>pitch(rad)</th>\n",
-       "      <th>yaw(rad)</th>\n",
-       "      <th>angular_velocity_x(rad/sec)</th>\n",
-       "      <th>angular_velocity_y(rad/sec)</th>\n",
-       "      <th>angular_velocity_z(rad/sec)</th>\n",
-       "      <th>target</th>\n",
+       "      <th>timestamp</th>\n",
+       "      <th>acceleration_x</th>\n",
+       "      <th>acceleration_y</th>\n",
+       "      <th>acceleration_z</th>\n",
+       "      <th>roll</th>\n",
+       "      <th>pitch</th>\n",
+       "      <th>yaw</th>\n",
+       "      <th>angular_velocity_x</th>\n",
+       "      <th>angular_velocity_y</th>\n",
+       "      <th>angular_velocity_z</th>\n",
+       "      <th>data_name_x</th>\n",
+       "      <th>label</th>\n",
+       "      <th>data_name_y</th>\n",
+       "      <th>timestamp_tar</th>\n",
        "    </tr>\n",
        "  </thead>\n",
        "  <tbody>\n",
        "    <tr>\n",
-       "      <th>count</th>\n",
-       "      <td>1.638690e+05</td>\n",
-       "      <td>163869.000000</td>\n",
-       "      <td>163869.000000</td>\n",
-       "      <td>163869.000000</td>\n",
-       "      <td>163869.000000</td>\n",
-       "      <td>163869.000000</td>\n",
-       "      <td>163869.000000</td>\n",
-       "      <td>163869.000000</td>\n",
-       "      <td>163869.000000</td>\n",
-       "      <td>163869.000000</td>\n",
-       "      <td>163869.000000</td>\n",
+       "      <th>0</th>\n",
+       "      <td>1396948626717</td>\n",
+       "      <td>0.0008</td>\n",
+       "      <td>0.0038</td>\n",
+       "      <td>-0.0054</td>\n",
+       "      <td>-0.0217</td>\n",
+       "      <td>0.0018</td>\n",
+       "      <td>0.0000</td>\n",
+       "      <td>-0.0010</td>\n",
+       "      <td>-0.0010</td>\n",
+       "      <td>-0.0014</td>\n",
+       "      <td>m</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>m</td>\n",
+       "      <td>1396949162159</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th>mean</th>\n",
-       "      <td>1.397007e+12</td>\n",
-       "      <td>-0.017777</td>\n",
-       "      <td>0.022236</td>\n",
-       "      <td>0.003558</td>\n",
-       "      <td>0.228333</td>\n",
-       "      <td>-0.292380</td>\n",
-       "      <td>0.816517</td>\n",
-       "      <td>0.002184</td>\n",
-       "      <td>0.002184</td>\n",
-       "      <td>-0.000136</td>\n",
-       "      <td>1.999963</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>std</th>\n",
-       "      <td>6.133859e+07</td>\n",
-       "      <td>0.293505</td>\n",
-       "      <td>0.229011</td>\n",
-       "      <td>0.195518</td>\n",
-       "      <td>0.597216</td>\n",
-       "      <td>0.420155</td>\n",
-       "      <td>1.586756</td>\n",
-       "      <td>0.737516</td>\n",
-       "      <td>0.737516</td>\n",
-       "      <td>1.188025</td>\n",
-       "      <td>0.007812</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>min</th>\n",
-       "      <td>1.396949e+12</td>\n",
-       "      <td>-7.343800</td>\n",
-       "      <td>-5.750900</td>\n",
-       "      <td>-7.348900</td>\n",
-       "      <td>-3.141200</td>\n",
-       "      <td>-1.557000</td>\n",
-       "      <td>-3.141100</td>\n",
-       "      <td>-28.170800</td>\n",
-       "      <td>-28.170800</td>\n",
-       "      <td>-25.219800</td>\n",
-       "      <td>0.000000</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>25%</th>\n",
-       "      <td>1.396965e+12</td>\n",
-       "      <td>-0.001100</td>\n",
-       "      <td>-0.000900</td>\n",
-       "      <td>-0.008300</td>\n",
-       "      <td>-0.007300</td>\n",
-       "      <td>-0.635500</td>\n",
-       "      <td>0.346500</td>\n",
-       "      <td>-0.004800</td>\n",
-       "      <td>-0.004800</td>\n",
-       "      <td>-0.004700</td>\n",
-       "      <td>2.000000</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>50%</th>\n",
-       "      <td>1.397020e+12</td>\n",
-       "      <td>0.001700</td>\n",
-       "      <td>0.002900</td>\n",
-       "      <td>-0.001100</td>\n",
-       "      <td>0.017300</td>\n",
-       "      <td>-0.166800</td>\n",
-       "      <td>1.391600</td>\n",
-       "      <td>0.000200</td>\n",
-       "      <td>0.000200</td>\n",
-       "      <td>-0.000100</td>\n",
-       "      <td>2.000000</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>75%</th>\n",
-       "      <td>1.397024e+12</td>\n",
-       "      <td>0.004800</td>\n",
-       "      <td>0.007100</td>\n",
-       "      <td>0.009400</td>\n",
-       "      <td>0.319400</td>\n",
-       "      <td>-0.064400</td>\n",
-       "      <td>2.013100</td>\n",
-       "      <td>0.004800</td>\n",
-       "      <td>0.004800</td>\n",
-       "      <td>0.004700</td>\n",
-       "      <td>2.000000</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>max</th>\n",
-       "      <td>1.397199e+12</td>\n",
-       "      <td>7.666000</td>\n",
-       "      <td>8.600600</td>\n",
-       "      <td>4.267000</td>\n",
-       "      <td>3.139200</td>\n",
-       "      <td>1.541600</td>\n",
-       "      <td>3.141400</td>\n",
-       "      <td>22.085100</td>\n",
-       "      <td>22.085100</td>\n",
-       "      <td>29.834700</td>\n",
-       "      <td>2.000000</td>\n",
+       "      <th>1</th>\n",
+       "      <td>1396948626816</td>\n",
+       "      <td>0.0025</td>\n",
+       "      <td>-0.0047</td>\n",
+       "      <td>-0.0093</td>\n",
+       "      <td>-0.0216</td>\n",
+       "      <td>0.0019</td>\n",
+       "      <td>-0.0001</td>\n",
+       "      <td>-0.0022</td>\n",
+       "      <td>-0.0022</td>\n",
+       "      <td>0.0023</td>\n",
+       "      <td>m</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>m</td>\n",
+       "      <td>1396949162159</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
        "</div>"
       ],
       "text/plain": [
-       "       timestamp(ms)  acceleration_x(g)  acceleration_y(g)  acceleration_z(g)  \\\n",
-       "count   1.638690e+05      163869.000000      163869.000000      163869.000000   \n",
-       "mean    1.397007e+12          -0.017777           0.022236           0.003558   \n",
-       "std     6.133859e+07           0.293505           0.229011           0.195518   \n",
-       "min     1.396949e+12          -7.343800          -5.750900          -7.348900   \n",
-       "25%     1.396965e+12          -0.001100          -0.000900          -0.008300   \n",
-       "50%     1.397020e+12           0.001700           0.002900          -0.001100   \n",
-       "75%     1.397024e+12           0.004800           0.007100           0.009400   \n",
-       "max     1.397199e+12           7.666000           8.600600           4.267000   \n",
+       "       timestamp  acceleration_x  acceleration_y  acceleration_z    roll  \\\n",
+       "0  1396948626717          0.0008          0.0038         -0.0054 -0.0217   \n",
+       "1  1396948626816          0.0025         -0.0047         -0.0093 -0.0216   \n",
        "\n",
-       "           roll(rad)     pitch(rad)       yaw(rad)  \\\n",
-       "count  163869.000000  163869.000000  163869.000000   \n",
-       "mean        0.228333      -0.292380       0.816517   \n",
-       "std         0.597216       0.420155       1.586756   \n",
-       "min        -3.141200      -1.557000      -3.141100   \n",
-       "25%        -0.007300      -0.635500       0.346500   \n",
-       "50%         0.017300      -0.166800       1.391600   \n",
-       "75%         0.319400      -0.064400       2.013100   \n",
-       "max         3.139200       1.541600       3.141400   \n",
+       "    pitch     yaw  angular_velocity_x  angular_velocity_y  angular_velocity_z  \\\n",
+       "0  0.0018  0.0000             -0.0010             -0.0010             -0.0014   \n",
+       "1  0.0019 -0.0001             -0.0022             -0.0022              0.0023   \n",
        "\n",
-       "       angular_velocity_x(rad/sec)  angular_velocity_y(rad/sec)  \\\n",
-       "count                163869.000000                163869.000000   \n",
-       "mean                      0.002184                     0.002184   \n",
-       "std                       0.737516                     0.737516   \n",
-       "min                     -28.170800                   -28.170800   \n",
-       "25%                      -0.004800                    -0.004800   \n",
-       "50%                       0.000200                     0.000200   \n",
-       "75%                       0.004800                     0.004800   \n",
-       "max                      22.085100                    22.085100   \n",
-       "\n",
-       "       angular_velocity_z(rad/sec)         target  \n",
-       "count                163869.000000  163869.000000  \n",
-       "mean                     -0.000136       1.999963  \n",
-       "std                       1.188025       0.007812  \n",
-       "min                     -25.219800       0.000000  \n",
-       "25%                      -0.004700       2.000000  \n",
-       "50%                      -0.000100       2.000000  \n",
-       "75%                       0.004700       2.000000  \n",
-       "max                      29.834700       2.000000  "
+       "  data_name_x  label data_name_y  timestamp_tar  \n",
+       "0           m    0.0           m  1396949162159  \n",
+       "1           m    0.0           m  1396949162159  "
       ]
      },
-     "execution_count": 141,
+     "execution_count": 17,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "data.describe()"
+    "base.head(2)"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 12,
+   "execution_count": 18,
    "metadata": {},
    "outputs": [
     {
      "data": {
       "text/plain": [
-       "0   2014-04-09 05:04:21.612\n",
-       "1   2014-04-09 05:04:26.475\n",
-       "2   2014-04-09 05:04:47.463\n",
-       "3   2014-04-09 05:04:48.154\n",
-       "4   2014-04-09 05:10:24.082\n",
-       "5   2014-04-09 05:10:24.389\n",
-       "6   2014-04-09 05:11:11.356\n",
-       "7   2014-04-09 05:11:11.951\n",
-       "8   2014-04-09 05:12:32.968\n",
-       "9   2014-04-09 05:12:33.332\n",
-       "Name: timestamp(ms), dtype: datetime64[ns]"
+       "0.0    98.444834\n",
+       "1.0     1.555166\n",
+       "Name: label, dtype: float64"
       ]
      },
-     "execution_count": 12,
+     "execution_count": 18,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
+   "source": [
+    "base.label.value_counts(normalize=True)*100"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Null_count</th>\n",
+       "      <th>Non_Null_count</th>\n",
+       "      <th>N_unique</th>\n",
+       "      <th>D_types</th>\n",
+       "      <th>Blank_count</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>timestamp</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>163774</td>\n",
+       "      <td>int64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>acceleration_x</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>12955</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>acceleration_y</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>12035</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>acceleration_z</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>12605</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>roll</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>20159</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>pitch</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>18179</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>yaw</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>35472</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>angular_velocity_x</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>19741</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>angular_velocity_y</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>19741</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>angular_velocity_z</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>19827</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>data_name_x</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>3</td>\n",
+       "      <td>object</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>label</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>2</td>\n",
+       "      <td>float64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>data_name_y</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>3</td>\n",
+       "      <td>object</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>timestamp_tar</th>\n",
+       "      <td>0</td>\n",
+       "      <td>163841</td>\n",
+       "      <td>628</td>\n",
+       "      <td>int64</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                    Null_count  Non_Null_count  N_unique  D_types  Blank_count\n",
+       "timestamp                    0          163841    163774    int64            0\n",
+       "acceleration_x               0          163841     12955  float64            0\n",
+       "acceleration_y               0          163841     12035  float64            0\n",
+       "acceleration_z               0          163841     12605  float64            0\n",
+       "roll                         0          163841     20159  float64            0\n",
+       "pitch                        0          163841     18179  float64            0\n",
+       "yaw                          0          163841     35472  float64            0\n",
+       "angular_velocity_x           0          163841     19741  float64            0\n",
+       "angular_velocity_y           0          163841     19741  float64            0\n",
+       "angular_velocity_z           0          163841     19827  float64            0\n",
+       "data_name_x                  0          163841         3   object            0\n",
+       "label                        0          163841         2  float64            0\n",
+       "data_name_y                  0          163841         3   object            0\n",
+       "timestamp_tar                0          163841       628    int64            0"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data_info(base)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### data visualisation "
+   ]
+  },
+  {
+   "cell_type": "raw",
+   "metadata": {},
    "source": [
     "pd.to_datetime(a_lbl['timestamp(ms)'],unit='ms')"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 21,
    "metadata": {},
    "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 105,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>timestamp(ms)</th>\n",
-       "      <th>acceleration_x(g)</th>\n",
-       "      <th>acceleration_y(g)</th>\n",
-       "      <th>acceleration_z(g)</th>\n",
-       "      <th>roll(rad)</th>\n",
-       "      <th>pitch(rad)</th>\n",
-       "      <th>yaw(rad)</th>\n",
-       "      <th>angular_velocity_x(rad/sec)</th>\n",
-       "      <th>angular_velocity_y(rad/sec)</th>\n",
-       "      <th>angular_velocity_z(rad/sec)</th>\n",
-       "      <th>target</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>1397019805843</td>\n",
-       "      <td>0.0809</td>\n",
-       "      <td>-0.2223</td>\n",
-       "      <td>0.2055</td>\n",
-       "      <td>0.4154</td>\n",
-       "      <td>-1.0777</td>\n",
-       "      <td>-2.4263</td>\n",
-       "      <td>-0.2120</td>\n",
-       "      <td>-0.2120</td>\n",
-       "      <td>0.3575</td>\n",
-       "      <td>NaN</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>1397019805942</td>\n",
-       "      <td>0.0505</td>\n",
-       "      <td>-0.1454</td>\n",
-       "      <td>0.0934</td>\n",
-       "      <td>0.4797</td>\n",
-       "      <td>-1.0745</td>\n",
-       "      <td>-2.3135</td>\n",
-       "      <td>-0.0847</td>\n",
-       "      <td>-0.0847</td>\n",
-       "      <td>0.6287</td>\n",
-       "      <td>NaN</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>2</th>\n",
-       "      <td>1397019806040</td>\n",
-       "      <td>0.1952</td>\n",
-       "      <td>0.5475</td>\n",
-       "      <td>-0.0295</td>\n",
-       "      <td>0.5663</td>\n",
-       "      <td>-1.0610</td>\n",
-       "      <td>-2.1922</td>\n",
-       "      <td>-0.2483</td>\n",
-       "      <td>-0.2483</td>\n",
-       "      <td>0.4558</td>\n",
-       "      <td>NaN</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>3</th>\n",
-       "      <td>1397019806139</td>\n",
-       "      <td>-0.0578</td>\n",
-       "      <td>0.1958</td>\n",
-       "      <td>0.0850</td>\n",
-       "      <td>0.6059</td>\n",
-       "      <td>-1.0666</td>\n",
-       "      <td>-2.1255</td>\n",
-       "      <td>-0.0796</td>\n",
-       "      <td>-0.0796</td>\n",
-       "      <td>0.0817</td>\n",
-       "      <td>NaN</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>4</th>\n",
-       "      <td>1397019806237</td>\n",
-       "      <td>0.0800</td>\n",
-       "      <td>-0.1689</td>\n",
-       "      <td>-0.2530</td>\n",
-       "      <td>0.5836</td>\n",
-       "      <td>-1.0347</td>\n",
-       "      <td>-2.1527</td>\n",
-       "      <td>0.6329</td>\n",
-       "      <td>0.6329</td>\n",
-       "      <td>0.0925</td>\n",
-       "      <td>NaN</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "   timestamp(ms)  acceleration_x(g)  acceleration_y(g)  acceleration_z(g)  \\\n",
-       "0  1397019805843             0.0809            -0.2223             0.2055   \n",
-       "1  1397019805942             0.0505            -0.1454             0.0934   \n",
-       "2  1397019806040             0.1952             0.5475            -0.0295   \n",
-       "3  1397019806139            -0.0578             0.1958             0.0850   \n",
-       "4  1397019806237             0.0800            -0.1689            -0.2530   \n",
-       "\n",
-       "   roll(rad)  pitch(rad)  yaw(rad)  angular_velocity_x(rad/sec)  \\\n",
-       "0     0.4154     -1.0777   -2.4263                      -0.2120   \n",
-       "1     0.4797     -1.0745   -2.3135                      -0.0847   \n",
-       "2     0.5663     -1.0610   -2.1922                      -0.2483   \n",
-       "3     0.6059     -1.0666   -2.1255                      -0.0796   \n",
-       "4     0.5836     -1.0347   -2.1527                       0.6329   \n",
-       "\n",
-       "   angular_velocity_y(rad/sec)  angular_velocity_z(rad/sec)  target  \n",
-       "0                      -0.2120                       0.3575     NaN  \n",
-       "1                      -0.0847                       0.6287     NaN  \n",
-       "2                      -0.2483                       0.4558     NaN  \n",
-       "3                      -0.0796                       0.0817     NaN  \n",
-       "4                       0.6329                       0.0925     NaN  "
-      ]
-     },
-     "execution_count": 105,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
    "source": [
-    "a_data.head()"
+    "vars1 = base.columns\n",
+    "pair_cols = base.drop(['timestamp', 'data_name_x', 'data_name_y','timestamp_tar'],axis = 1).columns"
+   ]
+  },
+  {
+   "cell_type": "raw",
+   "metadata": {
+    "scrolled": true
+   },
+   "source": [
+    "#run this for other continuous vars to plot, mine is old version and does not have sns \n",
+    "sns.catplot(x=\"acceleration_x\", y=\"label\", data=base);"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 87,
+   "execution_count": 28,
    "metadata": {
     "scrolled": true
    },
@@ -1897,318 +904,111 @@
     {
      "data": {
       "text/plain": [
-       "array([1397019861612, 1397019866475, 1397019887463, 1397019888154,\n",
-       "       1397020224082, 1397020224389, 1397020271356, 1397020271951,\n",
-       "       1397020352968, 1397020353332])"
+       "<matplotlib.axes._subplots.AxesSubplot at 0x7fafb7840438>"
       ]
      },
-     "execution_count": 87,
+     "execution_count": 28,
      "metadata": {},
      "output_type": "execute_result"
     },
     {
      "data": {
+      "image/png": "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\n",
       "text/plain": [
-       "71642"
+       "<Figure size 432x288 with 1 Axes>"
       ]
      },
-     "execution_count": 87,
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "base.boxplot('acceleration_x',by = 'label')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Index(['timestamp', 'acceleration_x', 'acceleration_y', 'acceleration_z',\n",
+       "       'roll', 'pitch', 'yaw', 'angular_velocity_x', 'angular_velocity_y',\n",
+       "       'angular_velocity_z', 'data_name_x', 'label', 'data_name_y',\n",
+       "       'timestamp_tar'],\n",
+       "      dtype='object')"
+      ]
+     },
+     "execution_count": 28,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "a_lbl['timestamp(ms)'].unique()\n",
-    "a_data['timestamp(ms)'].nunique()"
+    "base.columns"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 98,
+   "execution_count": 30,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(-1.34, 1.662]     0.987323\n",
+       "(-4.342, -1.34]    0.010345\n",
+       "(1.662, 4.664]     0.002032\n",
+       "(-7.36, -4.342]    0.000201\n",
+       "(4.664, 7.666]     0.000098\n",
+       "Name: acceleration_x, dtype: float64"
+      ]
+     },
+     "execution_count": 30,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "base.acceleration_x.value_counts(dropna = False,normalize=True,bins = 5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
    "metadata": {},
    "outputs": [],
-   "source": [
-    "a_data['target'] = a_data['timestamp(ms)'].map(a_lbl.set_index('timestamp(ms)')['label (0=start 1=end 2=cancel)'])"
-   ]
+   "source": []
   },
   {
    "cell_type": "code",
-   "execution_count": 99,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "Series([], Name: target, dtype: int64)"
-      ]
-     },
-     "execution_count": 99,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "a_data['target'] .value_counts()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 100,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "False    71642\n",
-       "Name: timestamp(ms), dtype: int64"
-      ]
-     },
-     "execution_count": 100,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "a_data['timestamp(ms)'].isin(a_lbl['timestamp(ms)']).value_counts()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 95,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([0, 1])"
-      ]
-     },
-     "execution_count": 95,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "p_lbl['label (0=start 1=end 2=cancel)'].unique()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 103,
+   "execution_count": null,
    "metadata": {},
    "outputs": [],
-   "source": [
-    "def unixToUTC(df,var):\n",
-    "    df[var]=pd.to_datetime(df[var]/1e3,unit='s')\n",
-    "    return(df)"
-   ]
+   "source": []
   },
   {
    "cell_type": "code",
-   "execution_count": 104,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "13"
-      ]
-     },
-     "execution_count": 104,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "len('1397019861612')"
-   ]
+   "outputs": [],
+   "source": []
   },
   {
    "cell_type": "code",
-   "execution_count": 101,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "ename": "NameError",
-     "evalue": "name 'unixToUTC' is not defined",
-     "output_type": "error",
-     "traceback": [
-      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
-      "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
-      "\u001b[0;32m<ipython-input-101-7f023778a29f>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0munixToUTC\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0ma_lbl\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m'timestamp(ms)'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
-      "\u001b[0;31mNameError\u001b[0m: name 'unixToUTC' is not defined"
-     ]
-    }
-   ],
-   "source": [
-    "unixToUTC(a_lbl,'timestamp(ms)')"
-   ]
+   "outputs": [],
+   "source": []
   },
   {
    "cell_type": "code",
-   "execution_count": 91,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "datetime.datetime(2014, 4, 9, 10, 34, 21, 612000)"
-      ]
-     },
-     "execution_count": 91,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "\n",
-    "from datetime import datetime\n",
-    "\n",
-    "timestamp = 1397019861.612\n",
-    "dt_object = datetime.fromtimestamp(timestamp)\n",
-    "\n",
-    "dt_object"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 80,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>timestamp(ms)</th>\n",
-       "      <th>acceleration_x(g)</th>\n",
-       "      <th>acceleration_y(g)</th>\n",
-       "      <th>acceleration_z(g)</th>\n",
-       "      <th>roll(rad)</th>\n",
-       "      <th>pitch(rad)</th>\n",
-       "      <th>yaw(rad)</th>\n",
-       "      <th>angular_velocity_x(rad/sec)</th>\n",
-       "      <th>angular_velocity_y(rad/sec)</th>\n",
-       "      <th>angular_velocity_z(rad/sec)</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>0</th>\n",
-       "      <td>1397019805843</td>\n",
-       "      <td>0.0809</td>\n",
-       "      <td>-0.2223</td>\n",
-       "      <td>0.2055</td>\n",
-       "      <td>0.4154</td>\n",
-       "      <td>-1.0777</td>\n",
-       "      <td>-2.4263</td>\n",
-       "      <td>-0.2120</td>\n",
-       "      <td>-0.2120</td>\n",
-       "      <td>0.3575</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>1</th>\n",
-       "      <td>1397019805942</td>\n",
-       "      <td>0.0505</td>\n",
-       "      <td>-0.1454</td>\n",
-       "      <td>0.0934</td>\n",
-       "      <td>0.4797</td>\n",
-       "      <td>-1.0745</td>\n",
-       "      <td>-2.3135</td>\n",
-       "      <td>-0.0847</td>\n",
-       "      <td>-0.0847</td>\n",
-       "      <td>0.6287</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>2</th>\n",
-       "      <td>1397019806040</td>\n",
-       "      <td>0.1952</td>\n",
-       "      <td>0.5475</td>\n",
-       "      <td>-0.0295</td>\n",
-       "      <td>0.5663</td>\n",
-       "      <td>-1.0610</td>\n",
-       "      <td>-2.1922</td>\n",
-       "      <td>-0.2483</td>\n",
-       "      <td>-0.2483</td>\n",
-       "      <td>0.4558</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>3</th>\n",
-       "      <td>1397019806139</td>\n",
-       "      <td>-0.0578</td>\n",
-       "      <td>0.1958</td>\n",
-       "      <td>0.0850</td>\n",
-       "      <td>0.6059</td>\n",
-       "      <td>-1.0666</td>\n",
-       "      <td>-2.1255</td>\n",
-       "      <td>-0.0796</td>\n",
-       "      <td>-0.0796</td>\n",
-       "      <td>0.0817</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>4</th>\n",
-       "      <td>1397019806237</td>\n",
-       "      <td>0.0800</td>\n",
-       "      <td>-0.1689</td>\n",
-       "      <td>-0.2530</td>\n",
-       "      <td>0.5836</td>\n",
-       "      <td>-1.0347</td>\n",
-       "      <td>-2.1527</td>\n",
-       "      <td>0.6329</td>\n",
-       "      <td>0.6329</td>\n",
-       "      <td>0.0925</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "   timestamp(ms)  acceleration_x(g)  acceleration_y(g)  acceleration_z(g)  \\\n",
-       "0  1397019805843             0.0809            -0.2223             0.2055   \n",
-       "1  1397019805942             0.0505            -0.1454             0.0934   \n",
-       "2  1397019806040             0.1952             0.5475            -0.0295   \n",
-       "3  1397019806139            -0.0578             0.1958             0.0850   \n",
-       "4  1397019806237             0.0800            -0.1689            -0.2530   \n",
-       "\n",
-       "   roll(rad)  pitch(rad)  yaw(rad)  angular_velocity_x(rad/sec)  \\\n",
-       "0     0.4154     -1.0777   -2.4263                      -0.2120   \n",
-       "1     0.4797     -1.0745   -2.3135                      -0.0847   \n",
-       "2     0.5663     -1.0610   -2.1922                      -0.2483   \n",
-       "3     0.6059     -1.0666   -2.1255                      -0.0796   \n",
-       "4     0.5836     -1.0347   -2.1527                       0.6329   \n",
-       "\n",
-       "   angular_velocity_y(rad/sec)  angular_velocity_z(rad/sec)  \n",
-       "0                      -0.2120                       0.3575  \n",
-       "1                      -0.0847                       0.6287  \n",
-       "2                      -0.2483                       0.4558  \n",
-       "3                      -0.0796                       0.0817  \n",
-       "4                       0.6329                       0.0925  "
-      ]
-     },
-     "execution_count": 80,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "a_data.head()"
-   ]
+   "outputs": [],
+   "source": []
   }
  ],
  "metadata": {
